@@ -1,6 +1,1 @@
-<<<<<<< HEAD
 uint8 in color detection
-diff b/w cv2.waitKey(1) & 0xFF == ord('q') and waitKey(0)
-=======
-uint8 in color detection
->>>>>>> 85b42d267eeeab499b6bfce5426ef1cba118cc9a
