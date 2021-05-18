@@ -1,1 +1,1 @@
-uint8 in color detection
+uint8 in color detection 
