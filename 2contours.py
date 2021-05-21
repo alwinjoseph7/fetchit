@@ -16,7 +16,7 @@ while(1):
 
     hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
 
-    lower = np.array([5, 80, 90], np.uint8)
+    lower = np.array([5, 80, 120], np.uint8)
     upper = np.array([15, 255, 255], np.uint8)
     mask = cv2.inRange(hsvFrame, lower, upper)
 
@@ -24,12 +24,13 @@ while(1):
     
 
     mask = cv2.dilate(mask, kernal)
-    res = cv2.bitwise_and(imageFrame, imageFrame,
+    res1 = cv2.bitwise_and(imageFrame, imageFrame,
                             mask = mask)
-    edged = cv2.Canny(res, 100, 200)
+    
+    res = cv2.GaussianBlur(res1,(5,5),0)
+    edged = cv2.Canny(res, 20,50)
     cv2.imshow("edges", edged)
-    cv2.imshow("mask", mask)
-    n=2
+    cv2.imshow("mask", res)
     cnts, hierarchy = cv2.findContours(mask,
                                         cv2.RETR_TREE,
                                         cv2.CHAIN_APPROX_SIMPLE)
@@ -53,7 +54,6 @@ while(1):
         center2 = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
        
     pts.append(center2)
-
     cv2.line(imageFrame, (center1), (center2), (0, 255, 0), thickness=3, lineType=8)
 
             
