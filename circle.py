@@ -1,40 +1,58 @@
-import cv2
 import numpy as np
-import time
+import cv2
+import argparse
+from collections import deque
 
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture("path.mp4")
+linecolor = (100, 215, 255)
+pts = deque(maxlen=7)
+while(1):
+    
+    ret, imageFrame = video.read()
+    if not ret:
+        video=cv2.VideoCapture("path.mp4")
+        continue
 
 
-while True:
-    _, frame = video.read()
+    hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
 
-    hsvFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    lower = np.array([10, 100, 20], np.uint8)
+    upper = np.array([25, 255, 255], np.uint8)
+    mask = cv2.inRange(hsvFrame, lower, upper)
 
-    red_lower = np.array([136, 87, 111], np.uint8)
-    red_upper = np.array([180, 255, 255], np.uint8)
-    red_mask = cv2.inRange(hsvFrame, red_lower, red_upper)
+    kernal = np.ones((5, 5), "uint8")
+    
 
-    green_lower = np.array([25, 52, 72], np.uint8)
-    green_upper = np.array([102, 255, 255], np.uint8)
-    green_mask = cv2.inRange(hsvFrame, green_lower, green_upper)
+    mask = cv2.dilate(mask, kernal)
+    res = cv2.bitwise_and(imageFrame, imageFrame,
+                            mask = mask)
+    edged = cv2.Canny(res, 1, 1)
+    cv2.imshow("edges", edged)
+    cv2.imshow("mask", mask)
 
-    blue_lower = np.array([94, 80, 2], np.uint8)
-    blue_upper = np.array([120, 255, 255], np.uint8)
-    blue_mask = cv2.inRange(hsvFrame, blue_lower, blue_upper)
+    cnts, hierarchy = cv2.findContours(mask,
+                                        cv2.RETR_TREE,
+                                        cv2.CHAIN_APPROX_SIMPLE)
+    
+    if len(cnts) > 0:
+        c = max(cnts, key=cv2.contourArea)
+        ((x, y), radius) = cv2.minEnclosingCircle(c)
+        M = cv2.moments(c)
+        center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+        if radius > 5:
+            cv2.circle(imageFrame, (int(x), int(y)), int(radius), (255, 255, 255), 2)
+            cv2.circle(imageFrame, center, 5, linecolor, -1)
+    pts.append(center)
+    for i in range(1, len(pts)):
+        if pts[i - 1] is None or pts[i] is None:
+            continue
+        thick = 3
+        cv2.line(imageFrame, pts[i - 1], pts[i], linecolor, thick)
 
-    cv2.imshow("original",frame)
-    cv2.imshow("red",red_mask)
-    cv2.imshow("green",green_mask)
-    cv2.imshow("blue",blue_mask)
-
-    ratio_red = cv2.countNonZero(red_mask)/(frame.size/3)*100
-    ratio_green = cv2.countNonZero(green_mask)/(frame.size/3)*100
-    ratio_blue = cv2.countNonZero(blue_mask)/(frame.size/3)*100
-
-    print(ratio_red," ",ratio_green," ",ratio_blue)
-
+            
+    # Program Termination
+    cv2.imshow("video", imageFrame)
     if cv2.waitKey(10) & 0xFF == ord('q'):
         video.release()
         cv2.destroyAllWindows()
         break
-    time.sleep(0.1)
