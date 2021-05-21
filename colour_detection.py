@@ -3,7 +3,19 @@ import numpy as np
 import time
 
 video = cv2.VideoCapture(0)
+colours=[['pink',255, 192, 203],['purple',128,0,128],['brown',165,42,42]]
 
+<<<<<<< HEAD
+=======
+def get_color_name(R, G, B):
+    min = 10000
+    for N,r,g,b in colours:
+        d = abs(R - r) + abs(G- g) + abs(B - b)
+        if d <= min:
+            min = d
+            cname = N
+    return cname
+>>>>>>> 98253659f37a55c141df5f298429662beee1728a
 
 while True:
     _, frame = video.read()
@@ -27,12 +39,22 @@ while True:
     cv2.imshow("green",green_mask)
     cv2.imshow("blue",blue_mask)
 
+<<<<<<< HEAD
     ratio_red = cv2.countNonZero(red_mask)/(frame.size/3)*100
     ratio_green = cv2.countNonZero(green_mask)/(frame.size/3)*100
     ratio_blue = cv2.countNonZero(blue_mask)/(frame.size/3)*100
 
     print(ratio_red," ",ratio_green," ",ratio_blue)
 
+=======
+    r = int(cv2.countNonZero(red_mask)/(frame.size/3)*255)
+    g = int(cv2.countNonZero(green_mask)/(frame.size/3)*255)
+    b = int(cv2.countNonZero(blue_mask)/(frame.size/3)*255)
+
+    print(r," ",g," ",b)
+    print(get_color_name(r,g,b))
+    
+>>>>>>> 98253659f37a55c141df5f298429662beee1728a
     if cv2.waitKey(10) & 0xFF == ord('q'):
         video.release()
         cv2.destroyAllWindows()
