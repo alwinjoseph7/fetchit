@@ -6,6 +6,8 @@ from collections import deque
 video = cv2.VideoCapture("robot.mp4")
 linecolor = (100, 215, 255)
 pts = deque(maxlen=7)
+width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
 while(1):
     
     ret, imageFrame = video.read()
@@ -37,8 +39,8 @@ while(1):
     
     cnts.sort (key = lambda x: cv2.contourArea (x), reverse = True)
     out = np.zeros_like (mask)
-    cv2.drawContours (out, [cnts [0]], -1, color = 255, thickness = -1)
-    cv2.drawContours (out, [cnts [1]], -1, color = 128, thickness = -1)
+    cv2.drawContours (imageFrame, [cnts [0]], -1, color = 255, thickness = 2)
+    cv2.drawContours (imageFrame, [cnts [1]], -1, color = 255, thickness = 2)
 
     if len(cnts) > 0:
 
@@ -56,9 +58,21 @@ while(1):
     pts.append(center2)
     cv2.line(imageFrame, (center1), (center2), (0, 255, 0), thickness=3, lineType=8)
 
+    if center1[0]-center2[0] != 0:
+        slope = (center1[1]-center2[1])/(center1[0]-center2[0])
+
+    if slope > 0.1:
+        cv2.putText(imageFrame, "Right", (width//2,height//2), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0),3)
+
+    elif slope < -0.1:
+        cv2.putText(imageFrame, "Left", (width//2,height//2), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0),3)
+    
+    else: 
+        cv2.putText(imageFrame, "Straight", (width//2,height//2), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0),3)
             
     # Program Termination
-    cv2.imshow("Multiple Color Detection in Real-TIme", imageFrame)
+    cv2.imshow("video", imageFrame)
+    
     if cv2.waitKey(10) & 0xFF == ord('q'):
         video.release()
         cv2.destroyAllWindows()
