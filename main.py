@@ -4,7 +4,7 @@ import colour_detection
 import navigate
 import time
 
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture("resources\\pathfinal.mp4")
 colour,stop='',False,
 
 while True:
@@ -12,18 +12,23 @@ while True:
     if(colour==''):
         colour=qr.read(frame) 
     else:
-        print("Start:",colour)
+        print("\n\n--------------Start:",colour,"--------------\n\n")
         break
 
 time.sleep(3)
 
 while True:
     _, frame = video.read()
-    navigate.nav(frame)
+    
+    try:
+        navigate.nav(frame)
+    except:
+        print("Track Not Visible")
+
     stop=colour_detection.detect(frame,colour)
     
     if(stop==True):
-        print("Stop")
+        print("\n\n--------------Stop--------------\n\n")
         video.release()
         cv2.destroyAllWindows()
         break
