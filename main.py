@@ -2,24 +2,28 @@ import cv2
 import qr
 import colour_detection
 import navigate
+import time
 
 video = cv2.VideoCapture(0)
-colour,start,stop='',False,False
+colour,stop='',False,
 
 while True:
     _, frame = video.read()
-    cv2.imshow("Video",frame)
-
     if(colour==''):
-        colour=qr.read(frame)
-        start=True
+        colour=qr.read(frame) 
+    else:
+        print("Start:",colour)
+        break
 
-    elif(start==True and stop==False):
-        navigate.nav(frame)
-        stop=colour_detection.detect(frame,colour)
+time.sleep(3)
 
-    elif(stop==True):
-        print("STOP")
+while True:
+    _, frame = video.read()
+    navigate.nav(frame)
+    stop=colour_detection.detect(frame,colour)
+    
+    if(stop==True):
+        print("Stop")
         video.release()
         cv2.destroyAllWindows()
         break
