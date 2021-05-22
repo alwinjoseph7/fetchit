@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 from collections import deque
 
-
 def nav(imageFrame):
     linecolor = (100, 215, 255)
     pts = deque(maxlen=7)
@@ -49,16 +48,11 @@ def nav(imageFrame):
         slope = (center1[1]-center2[1])/(center1[0]-center2[0])
 
     if slope > 0.1:
-        #cv2.putText(imageFrame, "Right", (width//2,height//2), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0),3)
-        print("Right")
+        print("\tRight")
 
     elif slope < -0.1:
-        #cv2.putText(imageFrame, "Left", (width//2,height//2), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0),3)
-        print("Left")
+        print("\tLeft")
     
     else: 
-        #cv2.putText(imageFrame, "Straight", (width//2,height//2), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0),3)
-        print("Straight")
-            
-    # Program Termination
+        print("\tStraight")
     cv2.imshow("video", imageFrame)
