@@ -8,8 +8,8 @@ def nav(imageFrame):
 
     hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
 
-    lower = np.array([5, 80, 120], np.uint8)
-    upper = np.array([15, 255, 255], np.uint8)
+    lower = np.array([4, 106, 105], np.uint8)
+    upper = np.array([28, 255, 255], np.uint8)
     mask = cv2.inRange(hsvFrame, lower, upper)
 
     kernal = np.ones((5, 5), "uint8")
@@ -18,7 +18,8 @@ def nav(imageFrame):
     res1 = cv2.bitwise_and(imageFrame, imageFrame,mask = mask)
     
     res = cv2.GaussianBlur(res1,(5,5),0)
-    edged = cv2.Canny(res, 20,50)
+
+    edged = cv2.Canny(res, 20, 50)
     cv2.imshow("edges", edged)
     cv2.imshow("mask", res)
     cnts, hierarchy = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -44,8 +45,7 @@ def nav(imageFrame):
     pts.append(center2)
     cv2.line(imageFrame, (center1), (center2), (0, 255, 0), thickness=3, lineType=8)
 
-    if center1[0]-center2[0] != 0:  
-        slope = (center1[1]-center2[1])/(center1[0]-center2[0])
+    slope = (center1[1]-center2[1])/(center1[0]-center2[0])
 
     if slope > 0.1:
         print("\tRight")
