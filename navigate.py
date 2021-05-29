@@ -20,8 +20,8 @@ def nav(imageFrame):
     res = cv2.GaussianBlur(res1,(5,5),0)
 
     edged = cv2.Canny(res, 20, 50)
-    cv2.imshow("edges", edged)
-    cv2.imshow("mask", res)
+    #cv2.imshow("edges", edged)
+    #cv2.imshow("mask", res)
     cnts, hierarchy = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     
     cnts.sort (key = lambda x: cv2.contourArea (x), reverse = True)

@@ -7,7 +7,7 @@ import serial
 
 video = cv2.VideoCapture(0)
 colour,stop='',False,
-Ser = serial.Serial("/dev/ACM0", baudrate=9600)
+Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
 Ser.flush()
 
 while True:
@@ -31,7 +31,6 @@ while True:
         break
 
 time.sleep(1)
-#rotate in place
 
 while True:    
     flag, frame = video.read()
@@ -40,16 +39,14 @@ while True:
     
     try:
         d=navigate.nav(frame)
-        Ser.write(str(d))
+        Ser.write(bytes(d,'utf-8'))
     except:
         print("Track Not Visible")
         if Ser.inWaiting>0:
             Ser.write(b"S")
-            #FailSafe
-        
-    stop=colour_detection.detect(frame,colour)
-    
-    if(stop==True):
+            Ser.write(b"X")
+            
+    if(colour_detection.detect(frame,colour)):
         print("\n\n--------------Stop--------------\n\n")
         if Ser.inWaiting>0:
             Ser.write(b"S")
