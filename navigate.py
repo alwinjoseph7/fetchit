@@ -47,12 +47,14 @@ def nav(imageFrame):
 
     slope = (center1[1]-center2[1])/(center1[0]-center2[0])
 
+    cv2.imshow("video", imageFrame)
+
     if slope > 0.1:
         print("\tRight")
-
+        return 'R'
     elif slope < -0.1:
         print("\tLeft")
-    
+        return 'L'
     else: 
         print("\tStraight")
-    cv2.imshow("video", imageFrame)
+        return 'F'
