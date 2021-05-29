@@ -28,7 +28,7 @@ void loop()
     {
       switch (command)
       {
-        case 'F':
+        case 'A':
           {
             FRONT_LEFT_MOTOR.setSpeed(255);
             FRONT_LEFT_MOTOR.run(FORWARD);
