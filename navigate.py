@@ -1,10 +1,8 @@
 import numpy as np
 import cv2
-from collections import deque
 
 def nav(imageFrame):
     linecolor = (100, 215, 255)
-    pts = deque(maxlen=7)
 
     hsvFrame = cv2.cvtColor(imageFrame, cv2.COLOR_BGR2HSV)
 
@@ -35,14 +33,12 @@ def nav(imageFrame):
         M = cv2.moments(cnts[0])
         center1 = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
         
-    pts.append(center1)
     if len(cnts) > 0:
 
         ((x, y), radius) = cv2.minEnclosingCircle(cnts[1])
         M = cv2.moments(cnts[1])
         center2 = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
        
-    pts.append(center2)
     cv2.line(imageFrame, (center1), (center2), (0, 255, 0), thickness=3, lineType=8)
 
     slope = (center1[1]-center2[1])/(center1[0]-center2[0])
