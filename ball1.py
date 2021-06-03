@@ -40,7 +40,12 @@ while True:
     else:
         print("F")
 
+    key = cv2.waitKey(30)
+    if key == 32:
+        break
 
+cap.release()
+cv2.destroyAllWindows()
 
 
 
