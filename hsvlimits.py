@@ -15,7 +15,6 @@ def main():
     import sys
     global image_hsv, pixel
     kj,image_src=cap.read()
-    #image_src=cv2.imread("C:\\Users\\adith\\Documents\\Fetch It\\resources\\end.png")
     image=cv2.GaussianBlur(image_src,(93,93),0)
     cv2.imshow("bgr",image_src)
     cv2.namedWindow('hsv')
