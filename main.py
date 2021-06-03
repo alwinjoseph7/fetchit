@@ -9,7 +9,6 @@ video = cv2.VideoCapture(0)
 colour,stop='',False,
 Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
 Ser.flush()
-#hello alwin
 
 while True:
     flag, frame = video.read()
