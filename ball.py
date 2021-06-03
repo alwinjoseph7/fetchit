@@ -1,12 +1,10 @@
 import numpy as np
 import cv2
 
-linecolor = (100, 215, 255)
-cap = cv2.VideoCapture(0)
-lwr_red = np.array([14, 74, 66])
-upper_red = np.array([48, 189, 255])
-while True:
-    ret, frame = cap.read()
+def ball(frame):
+    linecolor = (100, 215, 255)
+    lwr_red = np.array([14, 74, 66])
+    upper_red = np.array([48, 189, 255])
     frame = cv2.flip(frame, 1)
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     kernel = np.ones((5, 5), np.uint8)
@@ -25,22 +23,19 @@ while True:
             cv2.circle(frame, center, 5, linecolor, -1)
     #print((x,y))
 
-    
-    if(x < 280):
-        print("L")
-    elif(x > 320):
-        print("R")
-    else:
-        print("F")
-    
     cv2.imshow("mask", mask)
     cv2.imshow("res", res)
     cv2.imshow("Frame", frame)
-
-    if cv2.waitKey(30) & 0xFF == ord('q'):
-        cap.release()
-        cv2.destroyAllWindows()
-        break
+    
+    if(x < 280):
+        print("L")
+        return 'l'
+    elif(x > 320):
+        print("R")
+        return 'r'
+    else:
+        print("F")
+        return 'f'
 
 
 
