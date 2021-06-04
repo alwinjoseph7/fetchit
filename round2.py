@@ -6,6 +6,12 @@ cap = cv2.VideoCapture(0)
 linecolor = (100, 215, 255)
 lwr_red = np.array([  9, 206, 142])
 upper_red = np.array([ 29, 226 ,222])
+lwr_black = np.array([0,0,0], np.uint8)
+upper_black = np.array([10,10,40], np.uint8)
+lwr_violet = np.array([120,71,53], np.uint8)
+upper_violet = np.array([146,166,243], np.uint8)
+lwr_pink = np.array([152,86,171], np.uint8)
+upper_pink = np.array([183,264,289], np.uint8)
 dir = 'n'
 pos = 'i'
 Ser = serial.Serial("/dev/ttyACM0", baudrate=9600)
@@ -48,24 +54,23 @@ while True:
 
     #adding a try block here cuz it wont always detect a qr code every frame, data would be missing variable
     try:
-        data,_,_=cv2.QRCodeDetector().detectAndDecode(cv2.flip(frame, 1))
-        if data!='':
-            data=data.split(' - ')[1]
-            if(data=='right'):
-                print("shift-right")
-                dir = 'r'
-                pos = 'o'
-                #turn 90 degrees clock
-                
-            elif(data=='left'):
-                print("shift-left")
-                dir = 'l'
-                pos = 'i'
-                #turn 90 degrees anticlock
+        black_mask = cv2.inRange(hsv, lwr_black, upper_black)
+        violet_mask = cv2.inRange(hsv, lwr_violet, upper_violet)
+        pink_mask = cv2.inRange(hsv, lwr_pink, upper_pink)
+        if(cv2.countNonZero(black_mask)>200):
+            print("shift-right")
+            dir = 'r'
+            pos = 'o'
+            #turn 90 degrees clock
+        if(cv2.countNonZero(violet_mask)>200):
+            print("shift-left")
+            dir = 'l'
+            pos = 'i'
+            #turn 90 degrees anticlock
 
-            elif(data=='opposite'):
-                print("shift-opposite")
-                dir = 'o'
+        if(cv2.countNonZero(pink_mask)>200):
+            print("shift-opposite")
+            dir = 'o'
                 
     except:
         pass
